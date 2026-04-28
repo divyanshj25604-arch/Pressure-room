@@ -170,7 +170,7 @@ pressure-room/
 ├── backend/
 │   ├── main.py                         [FILE] — entire backend in one file for MVP
 │   ├── schema.sql                      [FILE] — 3 tables: users, sessions, messages
-│   ├── prompts.py                      [FILE] — all Claude prompts, nothing else
+│   ├── prompts.py                      [FILE] — all system prompts, nothing else
 │   ├── requirements.txt                [FILE]
 │   └── .env                            [FILE] — never commit this
 │
