@@ -247,4 +247,3 @@ npm run dev
 
 This is not a chatbot. It does not encourage you or soften feedback. It simulates the kind of conversation most people avoid — and tells you exactly how you performed.
 
-Build it right and it stops being a side project.
