@@ -1,5 +1,4 @@
-import React, { use } from 'react'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
     const [email, setEmail] = useState('');
@@ -33,6 +32,16 @@ function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
         }
     }
 
+    const inputClassName = `
+        w-full mb-4 px-4 py-2
+        bg-[var(--bg-primary)]
+        border border-[var(--border)]
+        rounded text-[var(--text-primary)]
+        focus:outline-none
+        focus:border-transparent
+        focus:ring-1 focus:ring-[var(--accent)]/70
+    `;
+
     return (
         <div className="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-xl border-2 border-[var(--border)] w-full max-w-md p-6">
             <h1 className="text-xl font-semibold mb-4 text-center">
@@ -45,15 +54,7 @@ function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
                         placeholder="Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="
-                            w-full mb-4 px-4 py-2
-                            bg-[var(--bg-primary)]
-                            border border-[var(--border)]
-                            rounded text-[var(--text-primary)]
-                            focus:outline-none
-                            focus:border-transparent
-                            focus:ring-1 focus:ring-[var(--accent)]/70
-                        "
+                        className={inputClassName}
                     />
                 )}
                 <input
@@ -61,30 +62,14 @@ function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="
-                        w-full mb-4 px-4 py-2
-                        bg-[var(--bg-primary)]
-                        border border-[var(--border)]
-                        rounded text-[var(--text-primary)]
-                        focus:outline-none
-                        focus:border-transparent
-                        focus:ring-1 focus:ring-[var(--accent)]/70
-                    "
+                    className={inputClassName}
                 />
                 <input
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="
-                        w-full mb-4 px-4 py-2
-                        bg-[var(--bg-primary)]
-                        border border-[var(--border)]
-                        rounded text-[var(--text-primary)]
-                        focus:outline-none
-                        focus:border-transparent
-                        focus:ring-1 focus:ring-[var(--accent)]/70
-                    "
+                    className={inputClassName}
                 />
                 {mode === "signup" && (
                     <input
@@ -92,15 +77,7 @@ function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
                         placeholder="Confirm Password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="
-                            w-full mb-4 px-4 py-2
-                            bg-[var(--bg-primary)]
-                            border border-[var(--border)]
-                            rounded text-[var(--text-primary)]
-                            focus:outline-none
-                            focus:border-transparent
-                            focus:ring-1 focus:ring-[var(--accent)]/70
-                        "
+                        className={inputClassName}
                     />
                 )}
                 <button
