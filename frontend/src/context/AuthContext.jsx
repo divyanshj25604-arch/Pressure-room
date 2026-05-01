@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
     function login(token, user) {
         setToken(token);
         setUser(user);
+        console.log("Logged in:", user);
         localStorage.setItem("token", token);
     }
 

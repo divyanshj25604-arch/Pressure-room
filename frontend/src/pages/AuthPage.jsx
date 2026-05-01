@@ -1,12 +1,16 @@
 import useAuth from "../hooks/useAuth";
+import AuthForm from "../components/auth/AuthForm";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function AuthPage() {
-    const { login, logout } = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
-    function handleLogin() {
+    const [mode, setMode] = useState("login");
+
+    function handleLogin(email, password) {
         const dummyToken = "dummy-token";
-        const dummyUser = { name: "Test User" };
+        const dummyUser = { name: email };
         login(dummyToken, dummyUser);
         navigate("/dashboard");
     }
@@ -14,23 +18,18 @@ function AuthPage() {
         logout();
         navigate("/login");
     }
+    function handleSignup(name, email, password) {
+        const dummyToken = "dummy-token";
+        const dummyUser = { name };
+        login(dummyToken, dummyUser);
+        navigate("/dashboard");
+    }
+    function handleToggleMode() {
+        setMode(mode === "login" ? "signup" : "login");
+    }
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-4xl font-bold mb-6">Login</h1>
-            <button
-                onClick={handleLogin}
-                className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-            >
-                Login
-            </button>
-            <h1 className="text-2xl font-bold mt-10">logout</h1>
-            <button
-                onClick={handleLogout}
-                className="px-6 py-3 bg-red-500 text-white rounded hover:bg-red-600 transition"
-            >
-                Logout
-            </button>
-            
+        <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)]">
+            <AuthForm mode={mode} onLogin={handleLogin} onSignup={handleSignup} onToggleMode={handleToggleMode} />
         </div>
     );
 }
