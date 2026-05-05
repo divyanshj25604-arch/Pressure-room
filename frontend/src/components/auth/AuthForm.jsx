@@ -35,7 +35,7 @@ function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
     const inputClassName = `
         w-full mb-4 px-4 py-2
         bg-[var(--bg-primary)]
-        border border-[var(--border)]
+        border border-[var(--bg-border)]
         rounded text-[var(--text-primary)]
         focus:outline-none
         focus:border-transparent
@@ -43,7 +43,7 @@ function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
     `;
 
     return (
-        <div className="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-xl border-2 border-[var(--border)] w-full max-w-md p-6">
+        <div className="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-xl border-2 border-[var(--bg-border)] w-full max-w-md p-6">
             <h1 className="text-xl font-semibold mb-4 text-center">
                 {mode === "login" ? "Login" : "Create Account"}
             </h1>
