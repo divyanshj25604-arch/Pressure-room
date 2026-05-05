@@ -5,6 +5,7 @@
 :root {
   --bg-primary: #0B0B0F;
   --bg-surface: #12121A;
+  --bg-border: #e4e4ed;
   --text-primary: #E5E7EB;
   --text-secondary: #9CA3AF;
 
@@ -34,7 +35,9 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px var(--bg-primary) inset !important;
   -webkit-text-fill-color: var(--text-primary) !important;
   transition: background-color 5000s ease-in-out 0s !important;
-  border: 1px solid var(--border) !important;
+  border: 1px;
+  border-color: var(--bg-border);
+  border-style: solid;
 }
 
 input:-webkit-autofill:focus {
