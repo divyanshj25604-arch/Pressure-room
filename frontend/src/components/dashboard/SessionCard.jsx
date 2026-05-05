@@ -5,7 +5,7 @@ function SessionCard() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-[var(--bg-surface)] border border-[var(--bg-border)] rounded-2xl p-6 md:p-8 flex flex-col shadow-sm h-full hover:scale-[1.005] transition-transform">
+    <div className="bg-[var(--bg-surface)] border border-[var(--bg-border)] rounded-2xl p-6 md:p-8 flex flex-col shadow-sm h-full hover:scale-[1.005] transition-transform duration-300 ">
       <div className="mb-8">
         <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] mb-3 block">
           New Session
@@ -24,7 +24,7 @@ function SessionCard() {
             Select session type
           </label>
           <div className="relative">
-            <select className="w-full bg-[var(--bg-primary)] border border-[var(--bg-border)] text-[var(--text-primary)] rounded-xl px-4 py-3.5 appearance-none focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-shadow cursor-pointer">
+            <select className="w-full bg-[var(--bg-primary)] border border-[var(--bg-border)] text-[var(--text-primary)] rounded-xl px-4 py-3.5 appearance-none focus:outline-none focus:border-transparent focus:ring-1 focus:ring-[var(--accent)] transition-shadow cursor-pointer">
               <option>Mock Interview</option>
               <option>Pitch</option>
               <option>Presentation</option>
@@ -39,7 +39,7 @@ function SessionCard() {
 
         <button
           onClick={() => navigate('/session')}
-          className="w-full bg-[var(--accent)] text-white font-medium py-3.5 rounded-xl hover:bg-[var(--accent-hover)] transition-colors"
+          className="w-full bg-[var(--accent)] text-white font-medium py-3.5 rounded-xl hover:bg-[var(--accent-hover)] transition-colors hover:scale-[1.005] transition-transform duration-300"
         >
           Start Session
         </button>
