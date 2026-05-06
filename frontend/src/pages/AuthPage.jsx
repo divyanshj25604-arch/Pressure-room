@@ -2,27 +2,39 @@ import useAuth from "../hooks/useAuth";
 import AuthForm from "../components/auth/AuthForm";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { loginUser, registerUser } from "../api/auth";
 
 function AuthPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [mode, setMode] = useState("login");
 
-    function handleLogin(email, password) {
-        const dummyToken = "dummy-token";
-        const dummyUser = { name: email };
-        login(dummyToken, dummyUser);
-        navigate("/dashboard");
+    async function handleLogin(email, password) {
+        try {
+            const data = await loginUser(email, password);
+
+            login(data.access_token, { name: email });
+
+            navigate("/dashboard");
+        } catch (err) {
+            console.error(err);
+            alert("Login failed");
+        }
     }
-    function handleLogout() {
-        logout();
-        navigate("/login");
-    }
-    function handleSignup(name, email, password) {
-        const dummyToken = "dummy-token";
-        const dummyUser = { name };
-        login(dummyToken, dummyUser);
-        navigate("/dashboard");
+    async function handleSignup(name, email, password) {
+        try {
+            await registerUser(name, email, password);
+
+            // optional: auto login after signup
+            const data = await loginUser(email, password);
+
+            login(data.access_token, { name });
+
+            navigate("/dashboard");
+        } catch (err) {
+            console.error(err);
+            alert("Signup failed");
+        }
     }
     function handleToggleMode() {
         setMode(mode === "login" ? "signup" : "login");
