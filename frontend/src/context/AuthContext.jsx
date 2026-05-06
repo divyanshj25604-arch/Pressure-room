@@ -7,13 +7,45 @@ export function AuthProvider({ children }) {
 
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    function logout() {
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem("token");
+    }
 
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
-        if (storedToken) {
-            setToken(storedToken);
-            setUser({ name: "Test User" });
+
+        if (!storedToken) {
+            setLoading(false);
+            return;
         }
+
+        async function verify() {
+            try {
+                const res = await fetch("http://localhost:8000/me", {
+                    headers: {
+                        Authorization: `Bearer ${storedToken}`,
+                    },
+                });
+
+                if (!res.ok) throw new Error("Invalid token");
+
+                const data = await res.json();
+
+                setToken(storedToken);
+                setUser({ name: data.sub });
+
+            } catch (err) {
+                logout();
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        verify();
     }, []);
 
     function login(token, user) {
@@ -23,14 +55,8 @@ export function AuthProvider({ children }) {
         localStorage.setItem("token", token);
     }
 
-    function logout() {
-        setToken(null);
-        setUser(null);
-        localStorage.removeItem("token");
-    }
-
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );

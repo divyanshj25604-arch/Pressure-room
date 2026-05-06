@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import SessionCard from "../components/dashboard/SessionCard";
 
 function DashboardPage() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const [sessionType, setSessionType] = useState("Mock Interview");
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans selection:bg-[var(--accent)] selection:text-white">
       <header className="border-b border-[var(--bg-border)] bg-[var(--bg-primary)]/80 backdrop-blur-md sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold tracking-tight">
+            <h1 className="text-xl font-bold tracking-tight ">
               Pressure Room
             </h1>
           </div>
@@ -50,7 +50,7 @@ function DashboardPage() {
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <button
-                onClick={() => navigate('/session/new')}
+                onClick={() => navigate(`/session/new?type=${encodeURIComponent(sessionType)}`)}
                 className="w-full sm:w-auto px-8 py-3.5 bg-[var(--accent)] text-white font-medium rounded-xl hover:bg-[var(--accent-hover)] transition-colors"
               >
                 Start Session
@@ -64,7 +64,7 @@ function DashboardPage() {
           </div>
 
           <div className="md:col-span-2 w-full max-w-md mx-auto md:max-w-none">
-            <SessionCard />
+            <SessionCard sessionType={sessionType} setSessionType={setSessionType} />
           </div>
 
         </div>
