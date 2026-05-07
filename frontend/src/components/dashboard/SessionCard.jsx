@@ -28,10 +28,13 @@ function SessionCard({ sessionType, setSessionType }) {
             Select session type
           </label>
           <div className="relative">
-            <select onChange={changeSessionType} value={sessionType} className="w-full bg-[var(--bg-primary)] border border-[var(--bg-border)] text-[var(--text-primary)] rounded-xl px-4 py-3.5 appearance-none focus:outline-none focus:border-transparent focus:ring-1 focus:ring-[var(--accent)] transition-shadow cursor-pointer">
-              <option>Mock Interview</option>
-              <option>Pitch</option>
-              <option>Presentation</option>
+            <select
+              value={sessionType}
+              onChange={changeSessionType}
+              className="w-full bg-[var(--bg-primary)] border border-[var(--bg-border)] text-[var(--text-primary)] rounded-xl px-4 py-3.5 appearance-none focus:outline-none focus:border-transparent focus:ring-1 focus:ring-[var(--accent)] transition-shadow cursor-pointer">
+              <option value="mock">Mock Interview</option>
+              <option value="pitch">Pitch</option>
+              <option value="presentation">Presentation</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[var(--text-secondary)]">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

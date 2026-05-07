@@ -5,7 +5,9 @@ import SessionCard from "../components/dashboard/SessionCard";
 
 function DashboardPage() {
   const { user, logout } = useAuth();
-  const [sessionType, setSessionType] = useState("Mock Interview");
+  const [sessionType, setSessionType] = useState("mock");
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans selection:bg-[var(--accent)] selection:text-white">
@@ -50,7 +52,9 @@ function DashboardPage() {
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <button
-                onClick={() => navigate(`/session/new?type=${encodeURIComponent(sessionType)}`)}
+                onClick={() =>
+                  navigate(`/session/new?type=${encodeURIComponent(sessionType)}`)
+                }
                 className="w-full sm:w-auto px-8 py-3.5 bg-[var(--accent)] text-white font-medium rounded-xl hover:bg-[var(--accent-hover)] transition-colors"
               >
                 Start Session
@@ -64,7 +68,10 @@ function DashboardPage() {
           </div>
 
           <div className="md:col-span-2 w-full max-w-md mx-auto md:max-w-none">
-            <SessionCard sessionType={sessionType} setSessionType={setSessionType} />
+            <SessionCard
+              sessionType={sessionType}
+              setSessionType={setSessionType}
+            />
           </div>
 
         </div>
