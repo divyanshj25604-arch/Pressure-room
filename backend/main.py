@@ -70,7 +70,7 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     return create_user(db=db, user=user)
 
 def authenticate_user(db, email, password):
-    user = db.query(User).filter(User.email == email).first()
+    user = get_user_by_email(db, email)
     if not user or not pwd_context.verify(password, user.hashed_password):
         return False
     return user
