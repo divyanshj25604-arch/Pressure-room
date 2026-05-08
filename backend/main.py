@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI,Depends,HTTPException,status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -8,6 +10,10 @@ from database import session_local, engine
 from models import User
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 app = FastAPI()
 
@@ -32,7 +38,6 @@ def get_db():
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
