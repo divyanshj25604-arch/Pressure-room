@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from database import session_local, engine
 from models import User
 from pydantic import BaseModel
+from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
@@ -60,7 +61,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 def create_user(db: Session, user: UserCreate):
-    hashed_password = pwd_context.hash(user.password)
+    safe_password = user.password[:72]
+    hashed_password = pwd_context.hash(safe_password)
     db_user = User(name=user.name, email=user.email, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
@@ -80,7 +82,7 @@ def authenticate_user(db, email, password):
         return False
     return user
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -118,3 +120,18 @@ async def verify_user_token(token: str):
 @app.get("/me")
 def get_me(user=Depends(get_current_user)):
     return user
+
+@app.post("/sessions")
+def create_session(session_type: str, user=Depends(get_current_user), db: Session = Depends(get_db)):
+    new_session = Session(
+        user_email=user["email"],
+        session_type=session_type
+    )
+    db.add(new_session)
+    db.commit()
+    db.refresh(new_session)
+    return new_session
+
+@app.get("/sessions")
+def get_sessions(user=Depends(get_current_user), db: Session = Depends(get_db)):
+    return db.query(Session).filter(Session.user_email == user["email"]).all()

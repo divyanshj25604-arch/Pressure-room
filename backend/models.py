@@ -12,5 +12,13 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+class Session(Base):
+    __tablename__ = "sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_email = Column(String, index=True)
+    session_type = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 
 Base.metadata.create_all(bind=engine)
