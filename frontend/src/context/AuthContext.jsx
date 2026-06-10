@@ -1,13 +1,21 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
+
+function normalizeUser(data) {
+    if (!data) return null;
+
+    return {
+        ...data,
+        name: data.name || data.email,
+    };
+}
 
 export function AuthProvider({ children }) {
 
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(() => Boolean(localStorage.getItem("token")));
 
     function logout() {
         setToken(null);
@@ -19,13 +27,12 @@ export function AuthProvider({ children }) {
         const storedToken = localStorage.getItem("token");
 
         if (!storedToken) {
-            setLoading(false);
             return;
         }
 
         async function verify() {
             try {
-                const res = await fetch("http://localhost:8000/me", {
+                const res = await fetch("http://127.0.0.1:8000/me", {
                     headers: {
                         Authorization: `Bearer ${storedToken}`,
                     },
@@ -36,9 +43,9 @@ export function AuthProvider({ children }) {
                 const data = await res.json();
 
                 setToken(storedToken);
-                setUser({ name: data.sub });
+                setUser(normalizeUser(data));
 
-            } catch (err) {
+            } catch {
                 logout();
             } finally {
                 setLoading(false);
@@ -50,7 +57,7 @@ export function AuthProvider({ children }) {
 
     function login(token, user) {
         setToken(token);
-        setUser(user);
+        setUser(normalizeUser(user));
         console.log("Logged in:", user);
         localStorage.setItem("token", token);
     }

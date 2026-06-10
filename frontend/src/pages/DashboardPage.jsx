@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import SessionCard from "../components/dashboard/SessionCard";
@@ -6,6 +6,7 @@ import SessionCard from "../components/dashboard/SessionCard";
 function DashboardPage() {
   const { user, logout } = useAuth();
   const [sessionType, setSessionType] = useState("mock");
+  const displayName = user?.name || user?.email || "User";
 
   const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ function DashboardPage() {
 
           <div className="flex items-center gap-4">
             <span className="hidden sm:inline-block text-sm font-medium text-[var(--text-secondary)]">
-              {user?.name.split("@")[0] || "User"}
+              {displayName.split("@")[0]}
             </span>
             <button
               onClick={logout}

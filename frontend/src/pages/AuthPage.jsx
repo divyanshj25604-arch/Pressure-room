@@ -13,7 +13,7 @@ function AuthPage() {
         try {
             const data = await loginUser(email, password);
 
-            login(data.access_token, { name: email });
+            login(data.access_token, { email });
 
             navigate("/dashboard");
         } catch (err) {
@@ -28,7 +28,7 @@ function AuthPage() {
             // optional: auto login after signup
             const data = await loginUser(email, password);
 
-            login(data.access_token, { name });
+            login(data.access_token, { name, email });
 
             navigate("/dashboard");
         } catch (err) {
@@ -41,7 +41,7 @@ function AuthPage() {
     }
     return (
         <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)]">
-            <AuthForm mode={mode} onLogin={handleLogin} onSignup={handleSignup} onToggleMode={handleToggleMode} />
+            <AuthForm key={mode} mode={mode} onLogin={handleLogin} onSignup={handleSignup} onToggleMode={handleToggleMode} />
         </div>
     );
 }

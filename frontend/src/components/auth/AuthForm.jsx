@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function AuthForm({ mode, onLogin, onSignup, onToggleMode }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    useEffect(() => {
-        setEmail('');
-        setPassword('');
-        setName('');
-        setConfirmPassword('');
-    }, [mode]);
 
     function handleSubmit(e) {
         e.preventDefault();
