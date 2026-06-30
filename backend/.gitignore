@@ -1,4 +1,12 @@
-.env
+# Python
+venv/
 __pycache__/
 *.pyc
-pressure-room.db
+.env
+
+# Database
+*.db
+
+# Node
+node_modules/
+dist/
