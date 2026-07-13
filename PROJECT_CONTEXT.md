@@ -74,9 +74,9 @@ Living document for AI-assisted development. Updated after each major feature.
 Font: Inter. Tailwind CSS 3. No TypeScript.
 # Pressure Room Project Context
 
-Last analyzed: 2026-06-30 11:59PM
+Last analyzed: 2026-07-14
 
-## Project Purpose
+## What this repo is
 
 Pressure Room is intended to be an AI-powered simulator for high-pressure professional conversations. Users should be able to practice scenarios such as interviews, pitches, presentations, salary negotiations, performance reviews, and workplace conflict. The long-term product loop is:
 
