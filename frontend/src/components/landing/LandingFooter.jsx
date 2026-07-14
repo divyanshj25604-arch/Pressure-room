@@ -6,7 +6,7 @@ const LandingFooter = () => {
           Pressure Room
         </span>
         <span className="text-[var(--text-muted)] text-center">
-          Built by AIRIS · Newton School of Technology
+          Built by Divyansh Jha
         </span>
         <span className="text-[var(--text-muted)]">© 2026</span>
       </div>
