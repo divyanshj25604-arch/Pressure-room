@@ -1,5 +1,10 @@
 import { useRef } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 const FEATURES = [
   {
@@ -35,34 +40,55 @@ const FEATURES = [
     title: "Scenario Library",
     eyebrow: "Professional Situations",
     description:
-      "Interviews, salary negotiations, presentations, difficult managers and high‑stakes workplace conversations.",
+      "Interviews, salary negotiations, presentations, difficult managers and high-stakes workplace conversations.",
   },
 ];
 
+const CARD_COUNT = FEATURES.length;
+const CENTER_INDEX = Math.floor(CARD_COUNT / 2);
+
 const Card = ({ feature, index, progress }) => {
-  const offsets = [-380, -190, 0, 190, 380];
-  const start = [-45, -20, 0, 20, 45];
-  const x = useTransform(progress, [0, 1], [start[index], offsets[index]]);
-  const rotate = useTransform(progress, [0, 1], [-8 + index * 4, 0]);
+  const spreadOffsets = [-300, -150, 0, 150, 300];
+  const stackOffsets = [-36, -18, 0, 18, 36];
+  const stackRotations = [-10, -5, 0, 5, 10];
+
+  const offset = useTransform(
+    progress,
+    [0, 1],
+    [stackOffsets[index], spreadOffsets[index]]
+  );
+  const x = useTransform(offset, (value) => `calc(-50% + ${value}px)`);
+  const rotate = useTransform(
+    progress,
+    [0, 1],
+    [stackRotations[index], 0]
+  );
   const scale = useTransform(
     progress,
     [0, 1],
-    [index === 2 ? 1 : 0.92, 1]
+    [index === CENTER_INDEX ? 1 : 0.94, 1]
+  );
+  const opacity = useTransform(
+    progress,
+    [0, 0.15, 1],
+    [index === CENTER_INDEX ? 1 : 0.55, 1, 1]
   );
 
   return (
     <motion.div
       style={{
         x,
+        y: "-50%",
         rotate,
         scale,
-        zIndex: 20 - Math.abs(index - 2),
+        opacity,
+        zIndex: 20 - Math.abs(index - CENTER_INDEX),
       }}
-      className="absolute left-1/2 top-1/2 w-[320px] -translate-x-1/2 -translate-y-1/2"
+      className="pointer-events-none absolute left-1/2 top-1/2 w-[min(320px,calc(100vw-3rem))]"
     >
-      <div className="rounded-3xl border border-[var(--bg-border)] bg-[var(--bg-surface)] p-8 shadow-2xl backdrop-blur">
-        <div className="flex items-center justify-between mb-10">
-          <span className="text-xs tracking-[0.25em] uppercase text-[var(--accent)]">
+      <div className="rounded-3xl border border-[var(--bg-border)] bg-[var(--bg-surface)] p-6 sm:p-8 shadow-2xl">
+        <div className="mb-8 flex items-center justify-between sm:mb-10">
+          <span className="text-xs uppercase tracking-[0.25em] text-[var(--accent)]">
             {feature.tag}
           </span>
           <span className="text-xs text-[var(--text-secondary)]">
@@ -70,15 +96,15 @@ const Card = ({ feature, index, progress }) => {
           </span>
         </div>
 
-        <h3 className="text-3xl font-semibold text-[var(--text-primary)] mb-6">
+        <h3 className="mb-4 text-2xl font-semibold text-[var(--text-primary)] sm:mb-6 sm:text-3xl">
           {feature.title}
         </h3>
 
-        <p className="text-[15px] leading-7 text-[var(--text-secondary)]">
+        <p className="text-sm leading-7 text-[var(--text-secondary)] sm:text-[15px]">
           {feature.description}
         </p>
 
-        <div className="mt-10 pt-6 border-t border-[var(--bg-border)]">
+        <div className="mt-8 border-t border-[var(--bg-border)] pt-6 sm:mt-10">
           <span className="text-xs uppercase tracking-[0.2em] text-[var(--accent)]">
             Pressure Room
           </span>
@@ -88,43 +114,42 @@ const Card = ({ feature, index, progress }) => {
   );
 };
 
-export default function FeaturesSection() {
+const FeaturesSection = () => {
   const ref = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start center", "end center"],
+    offset: ["start start", "end end"],
   });
 
   const progress = useSpring(scrollYProgress, {
     stiffness: 120,
-    damping: 24,
+    damping: 28,
   });
 
   return (
     <section
       ref={ref}
       id="features"
-      className="relative h-[220vh] bg-[var(--bg-primary)]"
+      className="relative bg-[var(--bg-primary)]"
+      style={{ height: `${CARD_COUNT * 70}vh` }}
     >
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-        <div className="mx-auto w-full max-w-7xl px-6">
-          <div className="mb-20 text-center">
-            <p className="mb-4 text-sm uppercase tracking-[0.3em] text-[var(--accent)]">
-              Core Experience
-            </p>
+      <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col overflow-hidden">
+        <div className="shrink-0 px-6 pt-10 pb-6 text-center sm:pt-12 sm:pb-8">
+          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-[var(--accent)]">
+            Core Experience
+          </p>
+          <h2 className="text-3xl font-bold text-[var(--text-primary)] sm:text-5xl">
+            Built for pressure.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base text-[var(--text-secondary)] sm:mt-6 sm:text-lg">
+            Scroll to unfold the product. Every panel represents one part of
+            the experience you&apos;ll use inside Pressure Room.
+          </p>
+        </div>
 
-            <h2 className="text-5xl font-bold text-[var(--text-primary)]">
-              Built for pressure.
-            </h2>
-
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--text-secondary)]">
-              Scroll to unfold the product. Every panel represents one part of
-              the experience you'll use inside Pressure Room.
-            </p>
-          </div>
-
-          <div className="relative h-[480px]">
+        <div className="relative min-h-0 flex-1">
+          <div className="absolute inset-0">
             {FEATURES.map((feature, index) => (
               <Card
                 key={feature.title}
@@ -138,4 +163,6 @@ export default function FeaturesSection() {
       </div>
     </section>
   );
-}
+};
+
+export default FeaturesSection;
