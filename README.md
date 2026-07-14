@@ -1,205 +1,112 @@
-﻿# Pressure Room
+# Pressure Room
 
-**AI-powered conversation simulator for high-stakes professional situations.**
+AI-powered simulator for high-stakes professional conversations. Practice salary negotiations, performance reviews, and difficult workplace scenarios before they happen.
 
-You pick a scenario. The AI becomes a difficult counterpart. You respond under real pressure. Then the system tells you exactly where you folded.
-
----
-
-## The Problem
-
-Most people are technically competent but fall apart in hard conversations. They concede too early, over-apologize, or lose control of the framing. The gap isn't knowledge — it's practice. And most people avoid practicing precisely because it's uncomfortable.
-
-Pressure Room closes that gap by putting you in the discomfort directly.
+> **Current status:** Auth and session scaffold are complete. AI conversation engine, scoring, and debrief are in active development.
 
 ---
 
-## What It Does
+## Overview
 
-- Simulates high-stakes scenarios: salary negotiations, performance reviews, conflict conversations
-- AI personas behave like real difficult counterparts — aggressive, dismissive, impatient
-- Dynamic tactics: interruptions, lowballing, guilt-tripping, reframing
-- Tracks how you perform with a **Caving Index** — a core metric that measures how much you fold
-- Delivers structured post-session feedback with clear improvement actions
+Pressure Room puts users in multi-turn conversations with an AI counterpart trained to simulate real professional pressure. After each session, a **Caving Index** score and structured debrief show where the user held firm and where they conceded unnecessarily.
 
----
-
-## Core Features
-
-### Pressure Engine
-- Multiple AI persona behaviors (aggressive, dismissive, impatient)
-- Real-time conversational friction — no polite chatbot behavior
-- Dynamic tactics that respond to what you say
-
-### Caving Index
-Measures how much you gave ground under pressure. Tracks:
-- Unnecessary concessions
-- Weak or hedging language
-- Over-apologizing
-- Deviation from your stated goal
-
-### Post-Session Analysis
-- Structured feedback broken down by dimension
-- Identified strengths and key weaknesses
-- One concrete improvement action per session
-
-### Performance Dashboard
-- Session scores over time
-- Trend tracking across dimensions
-- Visual analytics via Recharts
-
----
-
-## Example Output
-
-```json
-{
-  "caving_index": 85,
-  "assertiveness": 40,
-  "clarity": 90,
-  "composure": 60,
-  "feedback_summary": "You dropped your position too early.",
-  "key_weakness": "Over-apologizing",
-  "improvement_action": "Pause before responding to objections."
-}
-```
+Built with React + FastAPI. Designed to be fast, voice-capable, and deployable as a demo without infrastructure overhead.
 
 ---
 
 ## Tech Stack
 
-| Layer | Tech |
+| Layer | Technology |
 |---|---|
-| Frontend | React, Vite, Tailwind CSS |
-| Speech Input | Web Speech API (browser-native, no cost) |
-| Data Visualization | Recharts |
-| Backend | FastAPI (async) |
-| Database | SQLite |
-| AI Layer | Groq (7B/70B) |
-
----
-
-## Architecture
-
-```
-Frontend (React + Vite)
-        ↓
-FastAPI Backend
-        ↓
-AI Layer (LLM routing)
-        ↓
-SQLite Database
-```
-
-- FastAPI handles chat requests and evaluation pipelines
-- Conversation and analysis use separate model calls for speed vs. depth
-- SQLite stores users, sessions, and full transcripts
-- Voice input transcribed client-side via Web Speech API, then POSTed to backend for storage alongside typed turns
+| Frontend | React 19, Vite, Tailwind CSS, React Router DOM |
+| Backend | FastAPI, SQLAlchemy, SQLite |
+| Auth | OAuth2 Password flow, JWT (python-jose), passlib |
+| LLM (planned) | Groq (LLaMA 3 / Mixtral) |
+| Speech (planned) | Web Speech API |
+| Database | SQLite via SQLAlchemy |
 
 ---
 
 ## Project Structure
 
 ```
-pressure-room/
+Pressure-room/
+├── backend/
+│   ├── main.py              # FastAPI app, all route definitions
+│   ├── models.py            # SQLAlchemy ORM models (User, Session, Message)
+│   ├── database.py          # DB engine, session factory
+│   ├── auth.py              # JWT creation, verification, password hashing
+│   ├── prompts.py           # Placeholder for AI prompt templates
+│   ├── schema.sql           # DB blueprint including sessions and messages tables
+│   └── requirements.txt
 │
 ├── frontend/
+│   ├── public/
 │   ├── src/
-│   │   ├── main.jsx                    [FILE] — entry point
-│   │   ├── App.jsx                     [FILE] — routes only
-│   │   │
-│   │   ├── pages/
-│   │   │   ├── AuthPage.jsx            [FILE] — login + signup tabs
-│   │   │   ├── DashboardPage.jsx       [FILE] — home, history, charts
-│   │   │   └── SessionPage.jsx         [FILE] — active sim + debrief
-│   │   │
+│   │   ├── api/
+│   │   │   └── auth.js              # Auth API helpers (login, register, me)
 │   │   ├── components/
 │   │   │   ├── auth/
-│   │   │   │   └── AuthForm.jsx        [FILE] — shared login/signup form
-│   │   │   │
-│   │   │   ├── dashboard/
-│   │   │   │   ├── StatsStrip.jsx      [FILE] — 3 summary cards
-│   │   │   │   ├── SessionCard.jsx     [FILE] — single history entry
-│   │   │   │   └── ProgressChart.jsx   [FILE] — Recharts line + radar
-│   │   │   │
-│   │   │   ├── wizard/
-│   │   │   │   ├── WizardModal.jsx     [FILE] — modal shell + step state
-│   │   │   │   ├── StepScenario.jsx    [FILE]
-│   │   │   │   ├── StepGoal.jsx        [FILE]
-│   │   │   │   ├── StepPersona.jsx     [FILE]
-│   │   │   │   └── StepDifficulty.jsx  [FILE]
-│   │   │   │
-│   │   │   ├── session/
-│   │   │   │   ├── ConversationArea.jsx [FILE] — message thread
-│   │   │   │   ├── MessageBubble.jsx    [FILE] — user + AI bubbles
-│   │   │   │   └── MicButton.jsx        [FILE] — 4-state mic control
-│   │   │   │
-│   │   │   ├── debrief/
-│   │   │   │   ├── DebriefModal.jsx     [FILE] — full debrief view
-│   │   │   │   ├── CavingIndexHero.jsx  [FILE] — big score display
-│   │   │   │   ├── MetricCards.jsx      [FILE] — 4 score cards
-│   │   │   │   └── TranscriptHeatmap.jsx [FILE] — highlighted transcript
-│   │   │   │
-│   │   │   └── ui/
-│   │   │       ├── Button.jsx           [FILE]
-│   │   │       ├── Modal.jsx            [FILE]
-│   │   │       └── Spinner.jsx          [FILE]
-│   │   │
+│   │   │   │   └── AuthForm.jsx     # Reusable login/signup form
+│   │   │   └── dashboard/
+│   │   │       └── SessionCard.jsx  # Session type selector card
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx      # Auth state, token management
 │   │   ├── hooks/
-│   │   │   ├── useSpeechInput.js       [FILE] — Web Speech API wrapper
-│   │   │   └── useConfidenceScore.js   [FILE] — filler words, pace, hesitations
-│   │   │
-│   │   ├── api/
-│   │   │   ├── auth.js                 [FILE] — signup, login
-│   │   │   ├── sessions.js             [FILE] — create, fetch, list
-│   │   │   ├── chat.js                 [FILE] — send message, get AI reply
-│   │   │   └── score.js                [FILE] — trigger scoring, get debrief
-│   │   │
-│   │   ├── utils/
-│   │   │   ├── constants.js            [FILE] — scenarios, personas, difficulty
-│   │   │   └── cn.js                   [FILE] — classname helper (3 lines)
-│   │   │
-│   │   └── styles/
-│   │       └── globals.css             [FILE] — Tailwind imports + CSS vars
-│   │
-│   ├── index.html                      [GEN]
-│   ├── vite.config.js                  [CONFIG]
-│   ├── tailwind.config.js              [CONFIG]
-│   └── package.json                    [GEN]
+│   │   │   └── useAuth.js           # Auth context hook
+│   │   ├── pages/
+│   │   │   ├── AuthPage.jsx         # Login / signup page
+│   │   │   ├── DashboardPage.jsx    # Protected dashboard
+│   │   │   └── SessionPage.jsx      # Session start page (reads ?type= from URL)
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── package.json
 │
-├── backend/
-│   ├── main.py                         [FILE] — entire backend in one file for MVP
-│   ├── schema.sql                      [FILE] — 3 tables: users, sessions, messages
-│   ├── prompts.py                      [FILE] — all system prompts, nothing else
-│   ├── requirements.txt                [FILE]
-│   └── .env                            [FILE] — never commit this
-│
-├── .gitignore                          [FILE]
-└── .env.example                        [FILE]
+├── .env.example
+├── .gitignore
+└── README.md
 ```
 
 ---
 
 ## Getting Started
 
-### 1. Clone the repo
+### Prerequisites
+
+- Node.js >= 18
+- Python >= 3.10
+- A Groq API key ([get one here](https://console.groq.com)) — required once AI features are wired
+
+### 1. Clone
 
 ```bash
-git clone https://github.com/your-username/pressure-room.git
-cd pressure-room
+git clone https://github.com/divyanshj25604-arch/Pressure-room.git
+cd Pressure-room
 ```
 
-### 2. Backend setup
+### 2. Backend
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+
+# macOS / Linux
+source venv/bin/activate
+
+# Windows
+venv\Scripts\activate
+
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### 3. Frontend setup
+Backend runs at `http://127.0.0.1:8000`  
+Interactive API docs at `http://127.0.0.1:8000/docs`
+
+### 3. Frontend
 
 ```bash
 cd frontend
@@ -207,43 +114,166 @@ npm install
 npm run dev
 ```
 
+Frontend runs at `http://127.0.0.1:5173`
+
 ---
 
-## MVP Scope
+## Environment Variables
 
-- Scenario selection UI
-- Single AI persona simulation
-- Voice input via Web Speech API (Chrome/Edge) with transcript stored to backend
-- Transcript storage
-- Basic evaluation: Caving Index + feedback
+Copy `.env.example` to `.env` in the root and `backend/` directory.
+
+**Backend `.env`**
+
+```env
+SECRET_KEY=your_jwt_secret_key
+GROQ_API_KEY=your_groq_api_key         # Required once AI is wired
+DATABASE_URL=sqlite:///./pressureroom.db
+```
+
+---
+
+## API Reference
+
+### Auth
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/register` | Create a new user |
+| `POST` | `/login` | Authenticate, return JWT |
+| `GET` | `/me` | Validate JWT, return user info |
+| `GET` | `/verify-token/{token}` | Verify a JWT token |
+
+### Session (scaffolded, not yet active)
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/session/start` | Start a new session |
+| `POST` | `/session/{id}/message` | Send a user message, get AI reply |
+| `GET` | `/session/{id}/debrief` | Get scored debrief for a completed session |
+
+---
+
+## Auth Flow
+
+```
+AuthPage
+  └── AuthForm (login / register)
+        └── On success → JWT stored in localStorage
+              └── ProtectedRoute guards /dashboard and /session/new
+                    └── DashboardPage → SessionCard (type selector)
+                          └── Navigate to /session/new?type=<selected>
+```
+
+Token is managed in `AuthContext`. The `useAuth` hook exposes `user`, `token`, `login`, and `logout` to all components.
+
+---
+
+## Database Schema
+
+**Currently active**
+
+```sql
+users (id, name, email, hashed_password, created_at)
+```
+
+**Planned (defined in schema.sql)**
+
+```sql
+sessions (id, user_id, scenario_type, started_at, ended_at, caving_index)
+messages (id, session_id, role, content, turn_score, timestamp)
+```
+
+---
+
+## Session Types
+
+| Type | AI Role | Pressure Mode |
+|---|---|---|
+| `salary_negotiation` | Hiring manager | Anchoring, budget pushback |
+| `performance_review` | Direct manager | Criticism, ratings dispute |
+| `conflict_resolution` | Difficult colleague | Blame-shifting, deflection |
+
+Scenario prompts will live in `backend/prompts.py`.
+
+---
+
+## Caving Index (Planned)
+
+A session-level score from 0 to 100 measuring how much the user conceded under pressure.
+
+| Range | Signal |
+|---|---|
+| 0-30 | Held position consistently |
+| 31-60 | Mixed. Some unnecessary concessions. |
+| 61-80 | Caved on multiple key points. |
+| 81-100 | Collapsed early. Needs practice. |
+
+Calculated by the LLM scoring each user turn for hedging language, unprompted backtracking, and concession signals. Weighted average across all turns in the session.
 
 ---
 
 ## Roadmap
 
-**V1**
-- Core conversation loop
-- Basic scoring
-- Simple dashboard
+**Done**
+- [x] User registration and login
+- [x] JWT auth with protected routes
+- [x] Dashboard with session type selector
+- [x] Session page scaffold with URL param routing
+- [x] SQLite persistence with schema for sessions and messages
 
-**V2**
-- Dual-model architecture (chat + analysis)
-- Advanced analytics
-- Live pressure meter
+**In progress**
+- [ ] Groq AI conversation engine (`prompts.py` + `/session/message` endpoint)
+- [ ] Web Speech API integration (STT + TTS, browser-native)
+- [ ] Turn-by-turn scoring from LLM response metadata
 
-> **Note:** Voice input uses the Web Speech API. Fully supported on Chrome and Edge. Not supported on Safari or Firefox.
-
----
-
-## Who This Is For
-
-- Early professionals preparing for high-stakes conversations
-- Engineering students who want to build negotiation muscle
-- Anyone who knows what to say but loses it under pressure
+**Planned**
+- [ ] Caving Index calculation and display
+- [ ] Debrief view with per-turn breakdown and alternative response suggestions
+- [ ] Session history on dashboard
+- [ ] Shareable session report
 
 ---
 
-## What This Is Not
+## Available Scripts
 
-This is not a chatbot. It does not encourage you or soften feedback. It simulates the kind of conversation most people avoid — and tells you exactly how you performed.
+### Frontend
 
+| Command | Action |
+|---|---|
+| `npm run dev` | Start dev server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+
+### Backend
+
+| Command | Action |
+|---|---|
+| `uvicorn main:app --reload` | Start dev server with hot reload |
+| `uvicorn main:app` | Start production server |
+
+---
+
+## Contributing
+
+Before opening a PR, check the open issues. Current priorities:
+
+1. Wire AI conversation flow (`prompts.py` + `/session/message` endpoint)
+2. Integrate Web Speech API for voice input and output
+3. Implement Caving Index scoring logic
+4. Build debrief UI with per-turn analysis
+5. Add session history to dashboard
+
+Open an issue before starting work on any major feature.
+
+---
+
+## License
+
+MIT
+
+---
+
+## Contact
+
+Open an issue or submit a pull request on [GitHub](https://github.com/divyanshj25604-arch/Pressure-room).

@@ -11,6 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<AuthPage />} />
+
         <Route
           path="/dashboard"
           element={
@@ -19,8 +20,9 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
-          path="/session"
+          path="/session/new"
           element={
             <ProtectedRoute>
               <SessionPage />
