@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 function normalizeUser(data) {
     if (!data) return null;
@@ -32,7 +33,7 @@ export function AuthProvider({ children }) {
 
         async function verify() {
             try {
-                const res = await fetch("http://127.0.0.1:8000/me", {
+                const res = await fetch(`${API_URL}/me`, {
                     headers: {
                         Authorization: `Bearer ${storedToken}`,
                     },
@@ -58,7 +59,6 @@ export function AuthProvider({ children }) {
     function login(token, user) {
         setToken(token);
         setUser(normalizeUser(user));
-        console.log("Logged in:", user);
         localStorage.setItem("token", token);
     }
 

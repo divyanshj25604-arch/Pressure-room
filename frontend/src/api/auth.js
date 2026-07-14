@@ -1,5 +1,14 @@
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
+async function request(path, options) {
+    const res = await fetch(`${API_URL}${path}`, options);
+    const data = await res.json().catch(() => null);
+    if (!res.ok) throw new Error(data?.detail || "Request failed");
+    return data;
+}
+
 export async function loginUser(email, password) {
-    const res = await fetch("http://localhost:8000/login", {
+    return request("/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -9,16 +18,10 @@ export async function loginUser(email, password) {
             password: password,
         }),
     });
-
-    if (!res.ok) {
-        throw new Error("Login failed");
-    }
-
-    return res.json();
 }
 
 export async function registerUser(name, email, password) {
-    const res = await fetch("http://localhost:8000/register", {
+    return request("/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -29,10 +32,4 @@ export async function registerUser(name, email, password) {
             password: password,
         }),
     });
-
-    if (!res.ok) {
-        throw new Error("Signup failed");
-    }
-
-    return res.json();
 }

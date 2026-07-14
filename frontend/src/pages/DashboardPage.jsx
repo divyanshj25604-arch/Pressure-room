@@ -2,13 +2,25 @@ import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import SessionCard from "../components/dashboard/SessionCard";
+import { getSessions } from "../api/sessions";
 
 function DashboardPage() {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
   const [sessionType, setSessionType] = useState("mock");
+  const [sessions, setSessions] = useState(null);
+  const [sessionsError, setSessionsError] = useState("");
   const displayName = user?.name || user?.email || "User";
 
   const navigate = useNavigate();
+
+  async function handleViewSessions() {
+    try {
+      setSessionsError("");
+      setSessions(await getSessions(token));
+    } catch (err) {
+      setSessionsError(err.message || "Unable to load past sessions");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans selection:bg-[var(--accent)] selection:text-white">
@@ -53,6 +65,7 @@ function DashboardPage() {
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <button
+                onClick={handleViewSessions}
                 onClick={() =>
                   navigate(`/session/new?type=${encodeURIComponent(sessionType)}`)
                 }
@@ -76,6 +89,24 @@ function DashboardPage() {
           </div>
 
         </div>
+        {sessionsError && <p role="alert" className="mt-8 text-sm text-red-400">{sessionsError}</p>}
+        {sessions && (
+          <section className="mt-12 border-t border-[var(--bg-border)] pt-8">
+            <h2 className="text-xl font-semibold">Past Sessions</h2>
+            {sessions.length === 0 ? (
+              <p className="mt-3 text-[var(--text-secondary)]">No sessions yet.</p>
+            ) : (
+              <ul className="mt-4 space-y-3">
+                {sessions.map((session) => (
+                  <li key={session.id} className="rounded-lg border border-[var(--bg-border)] bg-[var(--bg-surface)] px-4 py-3">
+                    <span className="font-medium">{session.session_type.replaceAll("_", " ")}</span>
+                    <span className="ml-3 text-sm text-[var(--text-secondary)]">{new Date(session.created_at).toLocaleString()}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
       </main>
     </div>
   );
